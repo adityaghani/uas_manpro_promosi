@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ============================================================
-     TYPEWRITER LOOPING EFFECT (FIXED SPACES + ANIMATION LOOP)
+     TYPEWRITER LOOPING EFFECT — NOW WITH RANDOM TYPING SPEED
   ============================================================ */
   const heroTitle = document.querySelector('.hero h1');
 
@@ -9,13 +9,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullText = heroTitle.innerText.replace(/\s+/g, ' '); // Fix space collapsing
     heroTitle.innerText = '';
 
-    const typeSpeed = 50;
-    const deleteSpeed = 30;
+    const minType = 40;   // fastest type
+    const maxType = 120;  // slowest type
+    const minDelete = 20;
+    const maxDelete = 80;
+
     const delayAfterType = 1500;
     const delayAfterDelete = 600;
 
     let index = 0;
     let isDeleting = false;
+
+    function random(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     function typeLoop() {
       if (isDeleting) {
@@ -26,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
           setTimeout(typeLoop, delayAfterDelete);
           return;
         }
-        setTimeout(typeLoop, deleteSpeed);
+        setTimeout(typeLoop, random(minDelete, maxDelete));
 
       } else {
         heroTitle.innerText = fullText.substring(0, index++);
@@ -36,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
           setTimeout(typeLoop, delayAfterType);
           return;
         }
-        setTimeout(typeLoop, typeSpeed);
+        setTimeout(typeLoop, random(minType, maxType));
       }
     }
 
