@@ -1,90 +1,233 @@
-/* ===== GLOBAL RESET ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ---- Fonts (import so no HTML change required) ---- */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;600;700;900&display=swap');
+
+:root {
+  --primary: #6366f1;   /* Indigo Neon */
+  --accent: #d946ef;    /* Fuchsia Neon */
+  --bg-dark: #020617;   /* Very Dark Blue */
+  --glass: rgba(255, 255, 255, 0.03);
+  --border: rgba(255, 255, 255, 0.08);
 }
 
-html {
-  scroll-behavior: smooth;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #f5f5f5;
-  color: #222;
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-dark);
+  color: #e2e8f0;
   line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+
+  background-image:
+    radial-gradient(circle at 50% 0%, #1e1b4b 0%, transparent 60%),
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
 }
 
-/* ===== GENERAL LAYOUT ===== */
-header, .hero, .container {
-  padding: 40px 20px;
+/* scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* header */
+header {
   text-align: center;
+  padding: 1.5rem 1rem;
+  background: rgba(2, 6, 23, 0.7);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-header h1 {
-  font-size: 3rem;
+header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.8rem;
   font-weight: 700;
+  background: linear-gradient(to right, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 1px;
 }
 
 header p {
-  font-size: 1.1rem;
-  opacity: 0.8;
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 5px;
 }
 
+/* HERO — keep gradient and add caret */
+.hero {
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: var(--primary);
+  filter: blur(150px);
+  opacity: 0.2;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* IMPORTANT: target the inner spans that the typewriter will create */
 .hero h1 {
-  font-size: 3.2rem;
-  font-weight: 700;
-  letter-spacing: -1px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
+  letter-spacing: -0.5px;
+
+  /* subtle glow */
+  text-shadow: 0 0 20px rgba(99,102,241,0.18);
+  border-right: 4px solid var(--accent);
+  padding-right: 10px;
+
+  /* ensure rendering performance */
+  will-change: transform;
 }
 
-/* ===== BUTTON (if you have any) ===== */
-button, .btn {
-  padding: 12px 25px;
-  background: #007bff;
-  color: white;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background 0.3s ease;
-}
-button:hover, .btn:hover {
-  background: #005fcc;
+/* ensure each letter span inherits gradient */
+.hero h1 span {
+  display: inline-block;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
 }
 
-/* ===== CARDS ===== */
+/* caret controlled by CSS (blinking) */
+.hero h1.caret::after {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 1.05em;
+  margin-left: 6px;
+  background: var(--accent);
+  vertical-align: middle;
+  animation: blink 1s steps(2, end) infinite;
+  border-radius: 2px;
+  opacity: 0.95;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* container and headings (unchanged look) */
+.container { max-width: 1200px; margin: 0 auto; padding: 2rem 20px 6rem; }
+.container h2 {
+  text-align: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 3.5rem;
+  color: #fff;
+}
+
+/* grid (no change) */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
+
+/* CARD — keep glassmorphism but refine hover */
 .card {
-  background: white;
-  padding: 25px;
-  border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+
   transform-style: preserve-3d;
+  backface-visibility: hidden;
+
+  /* smoother transitions */
+  transition: transform 320ms cubic-bezier(.2,.9,.2,1), box-shadow 320ms cubic-bezier(.2,.9,.2,1), border-color 320ms ease;
+  will-change: transform;
 }
 
+.card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  transition: transform 450ms cubic-bezier(.2,.9,.2,1), filter 350ms ease;
+  filter: grayscale(20%);
+}
+
+/* hover — subtler and less distortion */
+.card:hover img {
+  transform: scale(1.07);
+  filter: grayscale(0%);
+}
 .card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 18px 35px rgba(0,0,0,0.12);
+  border-color: rgba(99,102,241,0.55); /* softened indigo */
+  box-shadow: 0 12px 40px rgba(99,102,241,0.12);
+  transform: translateY(-6px) scale(1.02); /* small lift */
 }
 
-/* ===== ANIMATION CLASSES ===== */
+.card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  margin: 1.5rem 1.5rem 0.5rem;
+  font-size: 1.6rem;
+  color: #fff;
+}
+.card p {
+  margin: 0 1.5rem 2rem;
+  font-size: 1rem;
+  color: #94a3b8;
+  font-weight: 300;
+}
+.card h3::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--accent);
+  margin-top: 10px;
+  border-radius: 2px;
+}
+
+/* hidden / visible (smoother easing and less blur) */
 .hidden {
   opacity: 0;
-  transform: translateY(25px);
-  transition: all 0.8s ease-out;
+  transform: translateY(40px) scale(0.98);
+  filter: blur(4px);
+  transition: opacity 680ms cubic-bezier(.2,.9,.2,1), transform 680ms cubic-bezier(.2,.9,.2,1), filter 680ms ease;
 }
-
 .visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  filter: blur(0);
 }
 
-/* ===== SMOOTHER TYPOGRAPHY ===== */
-h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  letter-spacing: -0.5px;
+/* footer */
+footer {
+  background: #000;
+  text-align: center;
+  padding: 3rem 1rem;
+  border-top: 1px solid var(--border);
+  color: #64748b;
+  font-size: 0.9rem;
 }
-p {
-  font-size: 1rem;
-  opacity: 0.9;
+
+/* mobile tweaks - keep tilt disabled via JS */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2.2rem; border-right: none; padding-right: 0; }
+  .grid { grid-template-columns: 1fr; }
+  .card { border-radius: 16px; }
 }
