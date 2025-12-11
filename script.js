@@ -1,39 +1,67 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // TYPEWRITER EFFECT
+  // TYPEWRITER WITH GRADIENT PRESERVED
   const heroTitle = document.querySelector('.hero h1');
   if (heroTitle) {
-    const textToType = heroTitle.innerText;
-    heroTitle.innerText = ''; 
-    
+    const fullText = heroTitle.innerText.trim();
+    heroTitle.innerHTML = "";
     let i = 0;
-    const speed = 50;
-    function typeWriter() {
-      if (i < textToType.length) {
-        heroTitle.innerHTML += textToType.charAt(i);
+
+    function typeWrite() {
+      if (i < fullText.length) {
+        const span = document.createElement("span");
+        span.textContent = fullText.charAt(i);
+        heroTitle.appendChild(span);
         i++;
-        setTimeout(typeWriter, speed);
+        setTimeout(typeWrite, 45);
       }
     }
-    setTimeout(typeWriter, 500);
+    setTimeout(typeWrite, 300);
   }
 
-  // ANIMATION OBSERVER
-  const observerOptions = { threshold: 0.2 };
-
+  // SCROLL REVEAL
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+      if (entry.isIntersecting) entry.target.classList.add('visible');
     });
-  }, observerOptions);
+  }, {
+    threshold: 0.2,
+    rootMargin: "0px 0px -50px 0px"
+  });
 
-  // Tambahkan elemen yang ingin dianimasikan
-  const hiddenElements = document.querySelectorAll('.card, .container h2, header p, .hero h1');
+  const elements = document.querySelectorAll('.card, .container h2, header p, .hero h1');
 
-  hiddenElements.forEach(el => {
+  elements.forEach(el => {
     el.classList.add('hidden');
+    observer.observe(el);
+  });
+
+  // 3D TILT (DISABLED ON MOBILE)
+  const cards = document.querySelectorAll('.card');
+  if (window.innerWidth > 768) {
+    cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const rotateX = -(y / rect.height) * 14;
+        const rotateY = (x / rect.width) * 14;
+
+        card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)`;
+        card.style.transition = 'transform 0.45s ease';
+      });
+
+      card.addEventListener('mouseenter', () => {
+        card.style.transition = 'none';
+      });
+    });
+  }
+
+});
     observer.observe(el);
   });
 
